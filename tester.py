@@ -5,7 +5,7 @@ import os
 
 st.title("Програма для аналізу твітів")
 
-file_path = "tweets.csv"  # имя файла в корне
+file_path = "tweets.csv"  
 
 if os.path.exists(file_path):
     st.success(f"✅ Файл {file_path} знайдено!")
@@ -16,13 +16,13 @@ if os.path.exists(file_path):
 
     if 'date' in df.columns:
         df['date'] = pd.to_datetime(df['date'], errors='coerce')
-        # Преобразуем в формат YYYY-MM для Plotly
+       
         df['month'] = df['date'].dt.to_period('M').astype(str)
 
-        # Количество твитов по месяцам
+   
         activity = df.groupby('month').size().reset_index(name='tweets_count')
 
-        # Средние лайки и репосты
+      
         if 'likes' in df.columns:
             activity['avg_likes'] = df.groupby('month')['likes'].mean().values
         if 'retweets' in df.columns:
@@ -45,3 +45,4 @@ if os.path.exists(file_path):
         st.warning("⚠️ У файлі має бути колонка 'date' з датою публікації.")
 else:
     st.error(f"❌ Файл {file_path} не знайдено в корневій папці.")
+
