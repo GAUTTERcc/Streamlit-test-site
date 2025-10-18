@@ -1,0 +1,44 @@
+[
+  {
+    "date": "2025-01-05",
+    "text": "Just finished setting up my new Python project! #coding",
+    "likes": 12,
+    "retweets": 3
+  },
+  {
+    "date": "2025-02-11",
+    "text": "Learning Streamlit today — it’s amazing for quick data apps! 🚀",
+    "likes": 30,
+    "retweets": 5
+  },
+  {
+    "date": "2025-02-28",
+    "text": "Exploring sentiment analysis using TextBlob — very cool stuff.",
+    "likes": 18,
+    "retweets": 2
+  },
+  {
+    "date": "2025-03-10",
+    "text": "Data visualization is an art and a science 🎨📊",
+    "likes": 22,
+    "retweets": 4
+  },
+  {
+    "date": "2025-04-02",
+    "text": "Sometimes debugging takes longer than coding... 😅",
+    "likes": 15,
+    "retweets": 1
+  },
+  {
+    "date": "2025-05-19",
+    "text": "Machine learning + Streamlit = interactive magic ✨",
+    "likes": 40,
+    "retweets": 6
+  },
+  {
+    "date": "2025-06-07",
+    "text": "Dark mode makes everything better. Even code.",
+    "likes": 27,
+    "retweets": 3
+  }
+]
