@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 
 st.title("Програма для аналізу твітів")
 
-# Вибір методу завантаження
 set_file = st.selectbox("Оберіть метод:", ["Обрати", "CSV", "JSON"])
 
 if set_file in ["CSV", "JSON"]:
@@ -38,3 +37,4 @@ if set_file in ["CSV", "JSON"]:
         st.info("⬆️ Завантажте файл для аналізу.")
 else:
     st.info("ℹ️ Ви не обрали метод!")
+
