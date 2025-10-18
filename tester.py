@@ -1,40 +1,57 @@
 import pandas as pd
 import streamlit as st
-import matplotlib.pyplot as plt
+import plotly.express as px
+import os
 
 st.title("Програма для аналізу твітів")
 
-set_file = st.selectbox("Оберіть метод:", ["Обрати", "CSV", "JSON"])
 
-if set_file in ["CSV", "JSON"]:
-    upload_file = st.file_uploader(f"Завантажте {set_file}-файл", type=set_file.lower())
+file_path = "tweets.csv" 
 
-    if upload_file:
-        st.success(f"✅ Файл {set_file} успішно завантажено!")
+if os.path.exists(file_path):
+    st.success(f"✅ Файл {file_path} знайдено!")
 
-        if set_file == "CSV":
-            df = pd.read_csv(upload_file)
+
+    df = pd.read_csv(file_path)
+
+    st.subheader("📄 Перші 10 записів")
+    st.write(df.head(10))
+
+    if 'date' in df.columns:
+        df['date'] = pd.to_datetime(df['date'], errors='coerce')
+        df['month'] = df['date'].dt.to_period('M')
+
+        activity = df.groupby('month').size().reset_index(name='tweets_count')
+
+        metrics = []
+        if 'likes' in df.columns:
+            avg_likes = df.groupby('month')['likes'].mean().reset_index(name='avg_likes')
+            metrics.append(avg_likes)
+        if 'retweets' in df.columns:
+            avg_retweets = df.groupby('month')['retweets'].mean().reset_index(name='avg_retweets')
+            metrics.append(avg_retweets)
+
+        for m in metrics:
+            activity = activity.merge(m, on='month', how='left')
+
+        st.subheader("📈 Активність користувача по місяцях")
+        fig = px.bar(activity, 
+                     x='month', 
+                     y='tweets_count', 
+                     text='tweets_count',
+                     title="Кількість твітів по місяцях")
         
-        elif set_file == "JSON":
-            df = pd.read_json(upload_file)
+        if 'avg_likes' in activity.columns:
+            fig.add_scatter(x=activity['month'], y=activity['avg_likes'], mode='lines+markers', name='Середні лайки')
+        if 'avg_retweets' in activity.columns:
+            fig.add_scatter(x=activity['month'], y=activity['avg_retweets'], mode='lines+markers', name='Середні репости')
 
-        st.subheader("📄 Перші 10 записів")
-        st.write(df.head(10))
+        fig.update_layout(xaxis_title="Місяць", yaxis_title="Кількість твітів / середнє")
+        st.plotly_chart(fig, use_container_width=True)
 
-        if 'date' in df.columns:
-            df['date'] = pd.to_datetime(df['date'], errors='coerce')
-            df['month'] = df['date'].dt.to_period('M')
-            activity = df.groupby('month').size()
-
-            st.subheader("📈 Активність користувача (кількість твітів)")
-            fig, ax = plt.subplots()
-            activity.plot(kind='bar', ax=ax)
-            plt.xticks(rotation=45)
-            st.pyplot(fig)
-        else:
-            st.warning("⚠️ У файлі має бути колонка 'date' з датою публікації.")
     else:
-        st.info("⬆️ Завантажте файл для аналізу.")
+        st.warning("⚠️ У файлі має бути колонка 'date' з датою публікації.")
 else:
-    st.info("ℹ️ Ви не обрали метод!")
+    st.error(f"❌ Файл {file_path} не знайдено в корневій папці.")
+
 
